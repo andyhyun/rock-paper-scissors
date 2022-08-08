@@ -4,12 +4,12 @@ function getComputerChoice() {
   const choice = Math.floor(Math.random() * 3);
   switch (choice) {
     case 0:
-      return 'rock';
+      return "Rock";
     case 1:
-      return 'paper';
+      return "Paper";
     case 2:
-      return 'scissors';
+      return "Scissors";
     default:
-      return '';
+      return "";
   }
 }
