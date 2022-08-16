@@ -1,5 +1,9 @@
 "use strict";
 
+function capitalizeFirstLetter(str) {
+  return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
+}
+
 function getComputerChoice() {
   const choice = Math.floor(Math.random() * 3);
   switch (choice) {
@@ -14,51 +18,50 @@ function getComputerChoice() {
   }
 }
 
-function playRound(playerSelection, computerSelection) {
-  playerSelection = playerSelection.toLowerCase();
-  computerSelection = computerSelection.toLowerCase();
+function getWinner(playerChoice, computerChoice) {
+  playerChoice = playerChoice.toLowerCase();
+  computerChoice = computerChoice.toLowerCase();
 
-  if (playerSelection === computerSelection) {
+  if (playerChoice === computerChoice) {
     return "tie";
-  } else if(playerSelection === "rock" && computerSelection === "scissors" ||
-            playerSelection === "paper" && computerSelection === "rock" ||
-            playerSelection === "scissors" && computerSelection === "paper") {
+  } else if(playerChoice === "rock" && computerChoice === "scissors" ||
+            playerChoice === "paper" && computerChoice === "rock" ||
+            playerChoice === "scissors" && computerChoice === "paper") {
     return "player";
   } else {
     return "computer";
   }
 }
 
-function capitalizeFirstLetter(str) {
-  return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
-}
+function playRound(e) {
+  const playerChoice = capitalizeFirstLetter(this.className);
+  const computerChoice = capitalizeFirstLetter(getComputerChoice());
+  const winner = getWinner(playerChoice, computerChoice);
 
-function game() {
-  let playerScore = 0;
-  let computerScore = 0;
-
-  for (let i = 1; i < 6; i++) {
-    let playerSelection = capitalizeFirstLetter(prompt("Rock, paper, or scissors?"));
-    let computerSelection = capitalizeFirstLetter(getComputerChoice());
-
-    let winner = playRound(playerSelection, computerSelection);
-
-    if (winner === "player") {
-      console.log(`You win round ${i}! ${playerSelection} beats ${computerSelection}`);
-      playerScore += 1;
-    } else if (winner === "computer") {
-      console.log(`You lose round ${i}! ${computerSelection} beats ${playerSelection}`);
-      computerScore += 1;
-    } else {
-      console.log(`Round ${i} is a tie!`);
-    }
+  if (winner === "player") {
+    playerScore += 1;
+  } else if (winner === "computer") {
+    computerScore += 1;
   }
+  
+  choices.textContent = `Player: ${playerChoice} | Computer: ${computerChoice}`;
+  scores.textContent = `Player ${playerScore} - ${computerScore} Computer`;
 
-  if (playerScore > computerScore) {
-    console.log(`You won ${playerScore}-${computerScore}`);
-  } else if (playerScore < computerScore) {
-    console.log(`You lost ${playerScore}-${computerScore}`);
-  } else {
-    console.log("The result is a tie");
+  if (playerScore === 5) {
+    message.textContent = "Player wins!";
+    buttons.forEach((button) => button.disabled = true);
+  } else if (computerScore === 5) {
+    message.textContent = "Computer wins!";
+    buttons.forEach((button) => button.disabled = true);
   }
 }
+
+const message = document.querySelector("h2");
+const choices = document.querySelector(".choices");
+const scores = document.querySelector(".scores");
+const buttons = document.querySelectorAll("button");
+
+let playerScore = 0;
+let computerScore = 0;
+
+buttons.forEach((button) => button.addEventListener("click", playRound));
